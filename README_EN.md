@@ -27,6 +27,7 @@ Place the plugin folder into `data/plugins/`, reload plugins, then enable it fro
 | `judge_provider` | Model provider for judgment (dropdown; leave empty to use the conversation model) | (empty) |
 | `judge_prompt` | Prompt template for the judgment LLM (variables: `{message}`, `{context}`, `{sender}`) | See below |
 | `context_size` | Number of recent messages to include as context (set to `0` to disable) | `3` |
+| `history_maxlen` | Max number of recent messages cached locally (affects local cache only, not the context sent to LLM) | `10` |
 | `reply_chance` | Probability (0–100) of replying even when the LLM says no | `20` |
 
 ### Default Judge Prompt
@@ -66,6 +67,8 @@ Send in any group chat:
 Toggles the judgment function on/off for that group.  
 You can also specify a state directly: `/reply true` or `/reply false`.
 
+> 🧠 **Persistent state:** Group switch states are automatically saved to `_group_switches.json` and restored after AstrBot restart — no need to reconfigure every time.
+
 ---
 
 ## About the ERROR Log on Interception
@@ -104,4 +107,29 @@ astrbot_plugin_autoreply_judge/
 ├── README.md
 ├── README_EN.md
 └── LICENSE
+
+---
+
+## Changelog
+
+### v1.1 (2026-06-29)
+
+- ✨ **Private Chat Filter** — Non-group messages are now ignored, preventing unintended processing
+- 🛡️ **Recursion Guard** — Added `_judging` flag to prevent recursive `on_llm_request` triggers from internal LLM calls
+- 🧹 **Cache Expiry** — 120s TTL with automatic cache cleanup to prevent memory leaks
+- ⏱ **Timeout Protection** — 15s timeout for LLM judgment, auto-allow on timeout
+- 🔒 **Enhanced JSON Parsing** — Stack-matching + trailing comma fixing for better LLM output resilience
+- 💾 **Persistent Switches** — Group toggle states are auto-saved and restored across restarts
+
+### v1.0.1
+
+- Fixed metadata description field
+- Improved log output formatting
+
+### v1.0.0
+
+- Initial release
+- Basic LLM auto-reply judgment
+- In-group `/reply` toggle command
+- Probabilistic fallback mechanism
 ```
