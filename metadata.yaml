@@ -1,0 +1,15 @@
+name: astrbot_plugin_autoreply_judge
+display_name: 主动回复判断
+short_desc: LLM智能判断群聊消息是否需要回复，群内可用 /reply 开关
+desc: 把群聊消息发给LLM判断是否要回复，自带概率冒泡。群内发 /reply 即可开关，配置超简单。
+version: v1.0.0
+author: chengxing507
+repo: https://github.com/chengxing507/astrbot_plugin_autoreply_judge
+support_platforms:
+  - aiocqhttp
+  - qq_official
+  - telegram
+  - wecom
+  - lark
+  - dingtalk
+  - discord

@@ -1,0 +1,33 @@
+{
+    "enabled": {
+        "description": "是否启用本插件",
+        "type": "bool",
+        "default": true,
+        "hint": "关闭后所有群都不生效，机器人正常响应所有群消息"
+    },
+    "judge_provider": {
+        "description": "用于判断的模型提供商（留空则用对话主模型）",
+        "type": "string",
+        "default": "",
+        "_special": "select_provider",
+        "hint": "从已配置的模型中选择一个专门用于判断，省钱又精准"
+    },
+    "judge_prompt": {
+        "description": "LLM判断用的Prompt（可用变量：{message} {context}）",
+        "type": "text",
+        "default": "你是一个群聊机器人助手，请判断以下群聊消息是否需要你回复。\n\n判断标准：\n1. 消息中提到了机器人名称或@了机器人 → 需要回复\n2. 消息在提问、请求帮助 → 需要回复\n3. 消息在跟机器人聊天互动 → 需要回复\n4. 普通闲聊、与机器人无关 → 不需要回复\n5. 纯表情、无意义消息 → 不需要回复\n\n请严格用以下JSON格式回复（只输出JSON）：\n{\"should_reply\": true/false, \"confidence\": 0-100, \"reason\": \"简短原因\"}\n\n当前消息：\n{message}\n\n最近上下文：\n{context}",
+        "hint": "修改后立即生效，无需重载插件"
+    },
+    "context_size": {
+        "description": "发给LLM参考的最近消息条数（0=不传上下文）",
+        "type": "int",
+        "default": 3,
+        "hint": "数值越大LLM判断越准，但token消耗也越多"
+    },
+    "reply_chance": {
+        "description": "LLM判断不回复时仍有概率回复（0=完全听LLM，100=总是回复）",
+        "type": "int",
+        "default": 20,
+        "hint": "0表示完全听LLM的判断，设为20就是20%概率冒个泡"
+    }
+}
