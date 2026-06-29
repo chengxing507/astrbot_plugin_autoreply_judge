@@ -16,7 +16,7 @@ from astrbot.api import logger, AstrBotConfig
 
 @register(
     "autoreply_judge",
-    "StarBot",
+    "Chengxing507",
     "LLM智能判断群聊消息是否需要自动回复",
     "1.1.1",
 )
