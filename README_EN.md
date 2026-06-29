@@ -112,6 +112,23 @@ astrbot_plugin_autoreply_judge/
 
 ## Changelog
 
+### v1.1.1 (2026-06-29)
+
+- Fixed concurrency race in `_judging_groups` causing redundant LLM calls
+- Fixed `/reply` state loss when multiple groups toggle simultaneously
+- Fixed switch file corruption on crash (atomic write)
+- Fixed token waste when `enabled` is turned off
+- Fixed cache cleanup frequency being doubled
+- Fixed memory leak due to missing cleanup in write path
+- Fixed redundant LLM calls from cache write race (double-check)
+- Fixed `bool("false")` evaluating to `True` causing interception failure
+- Fixed lock leak from `yield` inside `toggle_reply()`
+- Fixed race condition in `terminate()` during plugin unload
+- Fixed group ID `"0"` being misidentified as non-group
+- Fixed cache cleanup exception crashing message processing
+- Added missing `confidence` field in probability reply logs
+- Added `{sender}` variable documentation in `_conf_schema.json`
+
 ### v1.1 (2026-06-29)
 
 - ✨ **Private Chat Filter** — Non-group messages are now ignored, preventing unintended processing

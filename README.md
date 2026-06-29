@@ -129,6 +129,23 @@ astrbot_plugin_autoreply_judge/
 
 ## 更新日志
 
+### v1.1.1 (2026-06-29)
+
+- 修复 `_judging_groups` 并发竞争导致的多余 LLM 调用
+- 修复 `/reply` 多群同时开关导致状态丢失
+- 修复开关文件崩溃损坏问题（改为原子写入）
+- 修复关闭 `enabled` 后仍消耗 token 的问题
+- 修复缓存清理频率翻倍问题
+- 修复写路径缓存未清理导致内存泄漏
+- 修复缓存写入时窗口期多余 LLM 调用（double-check）
+- 修复 `bool("false")` 误判为 `True` 导致拦截失败
+- 修复 `toggle_reply()` 内 yield 导致锁泄漏
+- 修复 `terminate()` 卸载时与 `/reply` 的竞态
+- 修复群 ID `"0"` 被误判为非群消息
+- 修复缓存清理异常导致消息处理中断
+- 补全概率放行日志缺失的 confidence 字段
+- 补全 `_conf_schema.json` 中 `{sender}` 变量说明
+
 ### v1.1 (2026-06-29)
 
 - ✨ **私信屏蔽** — 非群聊消息不再触发判断逻辑，避免误处理

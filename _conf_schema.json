@@ -13,9 +13,9 @@
         "hint": "从已配置的模型中选择一个专门用于判断，省钱又精准"
     },
     "judge_prompt": {
-        "description": "LLM判断用的Prompt（可用变量：{message} {context}）",
+        "description": "LLM判断用的Prompt（可用变量：{message} {context} {sender}）",
         "type": "text",
-        "default": "你是一个群聊机器人助手，请判断以下群聊消息是否需要你回复。\n\n判断标准：\n1. 消息中提到了机器人名称或@了机器人 → 需要回复\n2. 消息在提问、请求帮助 → 需要回复\n3. 消息在跟机器人聊天互动 → 需要回复\n4. 普通闲聊、与机器人无关 → 不需要回复\n5. 纯表情、无意义消息 → 不需要回复\n\n请严格用以下JSON格式回复（只输出JSON）：\n{\"should_reply\": true/false, \"confidence\": 0-100, \"reason\": \"简短原因\"}\n\n当前消息：\n{message}\n\n最近上下文：\n{context}",
+        "default": "你是一个群聊机器人助手，请判断以下群聊消息是否需要你回复。\n\n判断标准：\n1. 消息中提到了机器人名称或@了机器人 → 需要回复\n2. 消息在提问、请求帮助 → 需要回复\n3. 消息在跟机器人聊天互动 → 需要回复\n4. 普通闲聊、与机器人无关 → 不需要回复\n5. 纯表情、无意义消息 → 不需要回复\n\n请严格用以下JSON格式回复（只输出JSON）：\n{\"should_reply\": true/false, \"confidence\": 0-100, \"reason\": \"简短原因\"}\n\n发送者：{sender}\n\n当前消息：\n{message}\n\n最近上下文：\n{context}",
         "hint": "修改后立即生效，无需重载插件"
     },
     "context_size": {
@@ -29,5 +29,11 @@
         "type": "int",
         "default": 20,
         "hint": "0表示完全听LLM的判断，设为20就是20%概率冒个泡"
+    },
+    "history_maxlen": {
+        "description": "每个群保留的最近消息条数（用于上下文）",
+        "type": "int",
+        "default": 10,
+        "hint": "数值越大上下文越丰富，但内存占用也越大"
     }
 }
