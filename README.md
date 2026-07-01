@@ -132,7 +132,6 @@ astrbot_plugin_autoreply_judge/
 
 #### 修复
 - 修复 Bot 被 @ 时不能跳过 LLM 判断而直接回复的问题
-- 使用 `event.is_at_or_wake_command` 原始状态替代 `[At:` 字符串匹配，修复部分平台（如 Discord、Telegram、微信等）@ 检测失效导致判断拦截的问题
 
 ### v1.2.1 (2026-07-01)
 

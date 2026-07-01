@@ -116,7 +116,6 @@ astrbot_plugin_autoreply_judge/
 
 #### Bug Fixes
 - Fixed the issue where the bot could not skip LLM judgment and reply directly when @mentioned
-- Fixed @ detection failure on some platforms (Discord, Telegram, WeChat, etc.) causing incorrect judgment interception
 
 ### v1.2.1 (2026-07-01)
 
