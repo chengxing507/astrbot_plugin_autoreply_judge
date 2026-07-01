@@ -112,6 +112,12 @@ astrbot_plugin_autoreply_judge/
 
 ## Changelog
 
+### v1.2.2 (2026-07-01)
+
+#### Bug Fixes
+- Fixed the issue where the bot could not skip LLM judgment and reply directly when @mentioned
+- Fixed @ detection failure on some platforms (Discord, Telegram, WeChat, etc.) causing incorrect judgment interception
+
 ### v1.2.1 (2026-07-01)
 
 #### New Features
@@ -119,10 +125,12 @@ astrbot_plugin_autoreply_judge/
 
 ### v1.2.0 (2026-06-30)
 
+#### Bug Fixes
 - Fixed plugin not working in some scenarios
 
 ### v1.1.1 (2026-06-29)
 
+#### Bug Fixes
 - Fixed concurrency race in `_judging_groups` causing redundant LLM calls
 - Fixed `/reply` state loss when multiple groups toggle simultaneously
 - Fixed switch file corruption on crash (atomic write)
@@ -140,20 +148,25 @@ astrbot_plugin_autoreply_judge/
 
 ### v1.1 (2026-06-29)
 
-- ✨ **Private Chat Filter** — Non-group messages are now ignored, preventing unintended processing
-- 🛡️ **Recursion Guard** — Added `_judging` flag to prevent recursive `on_llm_request` triggers from internal LLM calls
-- 🧹 **Cache Expiry** — 120s TTL with automatic cache cleanup to prevent memory leaks
-- ⏱ **Timeout Protection** — 15s timeout for LLM judgment, auto-allow on timeout
-- 🔒 **Enhanced JSON Parsing** — Stack-matching + trailing comma fixing for better LLM output resilience
-- 💾 **Persistent Switches** — Group toggle states are auto-saved and restored across restarts
+#### New Features
+- **Private Chat Filter** — Non-group messages are now ignored, preventing unintended processing
+- **Recursion Guard** — Added `_judging` flag to prevent recursive `on_llm_request` triggers from internal LLM calls
+
+#### Improvements
+- **Cache Expiry** — 120s TTL with automatic cache cleanup to prevent memory leaks
+- **Timeout Protection** — 15s timeout for LLM judgment, auto-allow on timeout
+- **Enhanced JSON Parsing** — Stack-matching + trailing comma fixing for better LLM output resilience
+- **Persistent Switches** — Group toggle states are auto-saved and restored across restarts
 
 ### v1.0.1
 
+#### Bug Fixes
 - Fixed metadata description field
 - Improved log output formatting
 
 ### v1.0.0
 
+#### New Features
 - Initial release
 - Basic LLM auto-reply judgment
 - In-group `/reply` toggle command

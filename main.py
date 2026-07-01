@@ -16,7 +16,7 @@ from astrbot.api import logger, AstrBotConfig
     "autoreply_judge",
     "StarBot",
     "LLM智能判断群聊消息是否需要自动回复",
-    "1.2.1",
+    "1.2.2",
 )
 class AutoReplyJudgePlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
@@ -35,10 +35,13 @@ class AutoReplyJudgePlugin(Star):
         self._judged_lock = asyncio.Lock()
         self._history_lock = asyncio.Lock()
         self._switch_lock = asyncio.Lock()
+        # 记录原始 is_at_or_wake_command 状态（在 on_group_message 修改之前）
+        # key = "group_id:msg" , value = 原始 is_at_or_wake_command
+        self._original_at_state: dict[str, bool] = {}
 
     async def initialize(self):
         self._load_switches()
-        logger.info(f"判断插件已加载 v1.2.0，已恢复 {len(self._group_switch)} 个群开关状态")
+        logger.info(f"判断插件已加载 v1.2.2，已恢复 {len(self._group_switch)} 个群开关状态")
 
     def _load_switches(self):
         try:
@@ -101,6 +104,13 @@ class AutoReplyJudgePlugin(Star):
             return
         sender = event.get_sender_name() or "未知"
         await self._record_history(group_id, sender, msg)
+
+        # ★ 修复：在修改 is_at_or_wake_command 之前，保存原始的@状态
+        key = f"{group_id}:{msg}"
+        # 仅当没有记录过时才写入，避免重复消息覆盖
+        if key not in self._original_at_state:
+            self._original_at_state[key] = event.is_at_or_wake_command
+
         # 关键：让非@群消息也能触发 LLM Agent → on_llm_request
         if not event.is_at_or_wake_command:
             event.is_at_or_wake_command = True
@@ -109,7 +119,7 @@ class AutoReplyJudgePlugin(Star):
 
     @filter.on_llm_request()
     async def on_llm_request(self, event: AstrMessageEvent, req: ProviderRequest):
-        """判断是否要回复；拦截靠 stop_event，放行靠 is_at_or_wake_command"""
+        """判断是否要回复；拦截靠 stop_event"""
         try:
             if not self.config.get("enabled", True):
                 return
@@ -132,11 +142,19 @@ class AutoReplyJudgePlugin(Star):
                         logger.info(f"缓存阻断 | {group_id} | {msg[:40]}")
                     return
 
-            # 有 @ 艾特 → 直接放行
-            if "[At:" in msg:
+            # ★ 修复：读取保存的原始@状态判断是否为真正的@消息
+            #   同时兼容旧版格式 [At: 作为兜底
+            key = f"{group_id}:{msg}"
+            is_original_at = self._original_at_state.pop(key, None)
+            if is_original_at is None:
+                # 没有记录（极少边界情况），走 [At: 格式兜底
+                is_original_at = "[At:" in msg
+
+            if is_original_at:
+                # 真正的@消息 → 跳过LLM判断，直接放行
                 async with self._judged_lock:
                     self._judged[cache_key] = {"block": False, "time": time.time()}
-                logger.info(f"艾特放行 | {group_id} | {msg[:40]}")
+                logger.info(f"@放行 | {group_id} | {msg[:40]}")
                 return
 
             async with self._judging_groups_lock:
